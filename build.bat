@@ -3,8 +3,8 @@ setlocal
 
 echo === Building plugins ===
 cd plugins
-call npm install || goto :fail
-call npm run build || goto :fail
+call pnpm install || goto :fail
+call pnpm run build || goto :fail
 cd ..
 
 echo.
@@ -14,8 +14,8 @@ msbuild pengu.sln -t:build -p:Configuration=Release -p:Platform=x64 -nologo -m |
 echo.
 echo === Building loader ===
 cd loader
-call npm install || goto :fail
-call npm run tauri build || goto :fail
+call pnpm install || goto :fail
+call pnpm run tauri build || goto :fail
 cd ..
 
 echo.

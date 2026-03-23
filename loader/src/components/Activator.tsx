@@ -52,7 +52,7 @@ export const Activator: Component = () => {
 
   return (
     <div
-      class="fixed bottom-6 right-0 z-10 translate-x-28 hover:translate-x-0 transition-transform"
+      class="fixed bottom-6 right-0 z-10"
     >
       <div
         class="flex items-center justify-between pl-3 shadow-lg w-44 h-14 rounded-l-full border border-neutral-700/30 border-r-0

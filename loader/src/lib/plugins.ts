@@ -1,8 +1,16 @@
 import { join } from '@tauri-apps/api/path'
 import { exists, readTextFile, readDir, createDir } from '@tauri-apps/api/fs'
+import { invoke } from '@tauri-apps/api'
 import { Shell } from './shell'
 import { Config } from './config'
 import { getHash } from './utils'
+
+export interface AssetInfo {
+  name: string
+  size?: number
+  downloadUrl: string
+  isSource: boolean
+}
 
 export interface PluginInfo {
   name: string
@@ -19,12 +27,30 @@ export const PluginManager = new class {
 
   private disabledSet = new Set<number>()
 
-  private getDir() {
+  getDir() {
     let path = Config.get('app', 'plugins_dir', '')
     if (!path || path.startsWith('.')) {
       path = Config.basePath('plugins')
     }
     return path
+  }
+
+  async fetchReleaseAssets(url: string): Promise<AssetInfo[]> {
+    return invoke<AssetInfo[]>('plugin:download|fetch_release_assets', { url })
+  }
+
+  async installPlugin(url: string, fromSource: boolean, assetUrl?: string, isSourceAsset?: boolean): Promise<string> {
+    const dir = this.getDir()
+    if (!await exists(dir)) {
+      await createDir(dir, { recursive: true })
+    }
+    return invoke<string>('plugin:download|install_plugin', {
+      url,
+      pluginsDir: dir,
+      fromSource,
+      assetUrl: assetUrl ?? null,
+      isSourceAsset: isSourceAsset ?? false,
+    })
   }
 
   async openFolder() {

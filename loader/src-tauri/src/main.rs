@@ -5,6 +5,7 @@ use named_lock::{Error, NamedLock};
 use std::env;
 
 mod config;
+mod download;
 mod shell;
 
 #[cfg(windows)]
@@ -58,6 +59,7 @@ fn main() -> Result<(), Error> {
         .setup_platform()
         .plugin(config::init())
         .plugin(shell::init())
+        .plugin(download::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
